@@ -1,0 +1,38 @@
+#!/bin/sh
+
+#600 25 is default
+xset r rate 250 60
+
+case ${DESKTOP_SESSION##*/} in
+  awesome)
+        # WINDOWS MANAGER AND DESKTOP ENVIRONMENT:
+        # -- Window manager
+        #export XDG_CURRENT_DESKTOP="kde"
+        # -- Desktop Environment
+        #export DESKTOP_SESSION="kde"
+        #export DE="kde"
+
+        # QT:
+        # -- QT icon Settings
+        #export GTK2_RC_FILES="$HOME/.gtkrc-2.0"
+        # -- Options and characters
+        #export QT_XFT="true"
+        # -- Default QT version in qtchooser (Arch suggest "4", but i have no problem settings QT5 as default QT)
+        #export QT_SELECT="5"
+        # -- KDE-QT5 settings
+        #export QT_QPA_PLATFORMTHEME="kde"
+        # -- Only QT5 settings
+        #export QT_QPA_PLATFORMTHEME="qt5ct"
+        # -- For pure QT4 application (non KDE4) to find KDE's styles.
+        #    This line is here for compatibility issues, there are still kde4 applications that are not upgraded to kde5.
+        #    Feel free to comment it out.
+        #export QT_PLUGIN_PATH=$HOME/.kde4/lib/kde4/plugins/:/usr/lib/kde4/plugins/
+        # -- For pure QT4 application (non KDE4) to find KDE's styles.
+
+        export QT_QPA_PLATFORMTHEME="gtk2"
+	export GTK_USE_PORTAL=1
+	export QT_STYLE_OVERRIDE="kvantum-dark"
+  ;;
+  *)
+  ;;
+esac
