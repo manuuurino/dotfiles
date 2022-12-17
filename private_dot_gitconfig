@@ -1,0 +1,7 @@
+[user]
+	email = manuuurino@mailbox.org
+	name = manuuurino
+[credential]
+	helper = store
+[core]
+	autocrlf = input
