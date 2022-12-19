@@ -562,11 +562,11 @@ alias pum='sudo reflector -c de --verbose -f 8 -p https --save /etc/pacman.d/mir
 alias mixer="ncpamixer"
 alias cb="xclip -sel c"
 
-alias ..=".."
-alias ...="../.."
-alias ....="../../.."
-alias .....="../../../.."
-alias ......="../../../../.."
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias ......="cd ../../../../.."
 
 #source ~/.zkbd/$TERM-${${DISPLAY:t}:-$VENDOR-$OSTYPE}
 
