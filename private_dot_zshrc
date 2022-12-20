@@ -31,6 +31,35 @@ setopt autocd
 bindkey -e
 # End of lines configured by zsh-newuser-install
 
+# options
+
+## Keep history of `cd` as in with `pushd` and make `cd -<TAB>` work.
+DIRSTACKSIZE=32
+setopt auto_pushd
+setopt pushd_ignore_dups
+setopt pushd_minus
+
+## history options
+setopt interactivecomments
+setopt hist_ignore_dups
+setopt hist_ignore_space
+setopt hist_expire_dups_first
+setopt hist_find_no_dups
+setopt hist_ignore_all_dups
+setopt hist_save_no_dups
+setopt inc_append_history
+
+# plugins
+# CTRL+ARROW_RIGHT   - partially accept suggestion up to the point that the cursor moves to
+# ARROW_RIGHT or END - accept suggestion and replace contents of the command line buffer with the suggestion
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+# CTRL+T - paste the selected files and directories onto the command-line
+# CTRL+R - paste the selected command from history onto the command-line
+# ALT+C  - cd into the selected directory
+source /usr/share/fzf/key-bindings.zsh
+# Type ** and hit tab (eg. with the cd command; works with directories, files, process IDs, hostnames, environment variables)
+source /usr/share/fzf/completion.zsh
+
 # key bindings
 # Print current key bindings: bindkey
 # List available key bindings: bindkey -l
@@ -44,68 +73,6 @@ bindkey "^[[1;5C" forward-word # CTRL+ARROW_RIGHT - move cursor forward one word
 bindkey "^[[1;5D" backward-word # CTRL+ARROW_LEFT - move cursor backward one word
 bindkey "^Z" undo # CTRL+Z
 bindkey "^Y" redo # CTRL+Y
-
-# options
-
-# If the internal history needs to be trimmed to add the current command line, setting this
-# option will cause the oldest history event that has a duplicate to be lost before losing a
-# unique event from the list. You should be sure to set the value of HISTSIZE to a larger
-# number than SAVEHIST in order to give you some room for the duplicated events, otherwise
-# this option will behave just like HIST_IGNORE_ALL_DUPS once the history fills up with unique
-# events.
-setopt HIST_EXPIRE_DUPS_FIRST
-
-# When searching for history entries in the line editor, do not display duplicates of a line
-# previously found, even if the duplicates are not contiguous.
-setopt HIST_FIND_NO_DUPS
-
-# If a new command line being added to the history list duplicates an older one, the older
-# command is removed from the list (even if it is not the previous event).
-setopt HIST_IGNORE_ALL_DUPS
-
-# Do not enter command lines into the history list if they are duplicates of the previous event.
-setopt HIST_IGNORE_DUPS
-
-# Remove command lines from the history list when the first character on the line is a space,
-# or when one of the expanded aliases contains a leading space. Only normal aliases (not
-# global or suffix aliases) have this behaviour. Note that the command lingers in the internal
-# history until the next command is entered before it vanishes, allowing you to briefly reuse
-# or edit the line. If you want to make it vanish right away without entering another command,
-# type a space and press return.
-setopt HIST_IGNORE_SPACE
-
-# When writing out the history file, older commands that duplicate newer ones are omitted.
-setopt HIST_SAVE_NO_DUPS
-
-# This option works like APPEND_HISTORY except that new history lines are added to the $HISTFILE
-# incrementally (as soon as they are entered), rather than waiting until the shell exits.
-setopt INC_APPEND_HISTORY
-
-# Keep history of `cd` as in with `pushd` and make `cd -<TAB>` work.
-DIRSTACKSIZE=32
-setopt auto_pushd
-setopt pushd_ignore_dups
-setopt pushd_minus
-
-# Ignore lines prefixed with '#'.
-setopt interactivecomments
-
-# Ignore duplicate in history.
-setopt hist_ignore_dups
-
-# Prevent record in history entry if preceding them with at least one space
-setopt hist_ignore_space
-
-# plugins
-# CTRL+ARROW_RIGHT   - partially accept suggestion up to the point that the cursor moves to
-# ARROW_RIGHT or END - accept suggestion and replace contents of the command line buffer with the suggestion
-source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-# CTRL+T - paste the selected files and directories onto the command-line
-# CTRL+R - paste the selected command from history onto the command-line
-# ALT+C  - cd into the selected directory
-source /usr/share/fzf/key-bindings.zsh
-# Type ** and hit tab (eg. with the cd command; works with directories, files, process IDs, hostnames, environment variables)
-source /usr/share/fzf/completion.zsh
 
 # Sift through history for previous commands matching everything up to current cursor position.
 # Moves the cursor to the end of line after each match.
