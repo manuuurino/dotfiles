@@ -1,0 +1,227 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# env exports
+source "${ZDOTDIR:-$HOME}/.zshenv"
+
+# The following lines were added by compinstall
+zstyle ':completion:*' rehash true
+zstyle ':completion:*' completer _expand _complete _ignored _correct _approximate
+zstyle ':completion:*' list-colors ''
+zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
+zstyle ':completion:*' matcher-list '' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'r:|[._-.]=** r:|=**'
+zstyle ':completion:*' max-errors 2 numeric
+zstyle ':completion:*' menu select=5
+zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
+zstyle :compinstall filename "$HOME/.zshrc"
+
+autoload -Uz compinit
+compinit
+# End of lines added by compinstall
+
+# Lines configured by zsh-newuser-install
+HISTFILE="${ZDOTDIR:-$HOME}/.histfile"
+HISTSIZE=100000
+SAVEHIST=10000
+setopt autocd
+bindkey -e
+# End of lines configured by zsh-newuser-install
+
+# key bindings
+# Print current key bindings: bindkey
+# List available key bindings: bindkey -l
+# Interactively show pressed key when pressing any keys
+bindkey "^[[H" beginning-of-line # HOME
+bindkey "^[[F" end-of-line # END
+bindkey "^[[3~" delete-char # DEL
+bindkey "^[[3;5~" delete-word # CTRL+DEL - delete a whole word after cursor
+bindkey "^H" backward-delete-word # CTRL+BACKSPACE - delete a whole word before cursor
+bindkey "^[[1;5C" forward-word # CTRL+ARROW_RIGHT - move cursor forward one word
+bindkey "^[[1;5D" backward-word # CTRL+ARROW_LEFT - move cursor backward one word
+bindkey "^Z" undo # CTRL+Z
+bindkey "^Y" redo # CTRL+Y
+
+# options
+
+# If the internal history needs to be trimmed to add the current command line, setting this
+# option will cause the oldest history event that has a duplicate to be lost before losing a
+# unique event from the list. You should be sure to set the value of HISTSIZE to a larger
+# number than SAVEHIST in order to give you some room for the duplicated events, otherwise
+# this option will behave just like HIST_IGNORE_ALL_DUPS once the history fills up with unique
+# events.
+setopt HIST_EXPIRE_DUPS_FIRST
+
+# When searching for history entries in the line editor, do not display duplicates of a line
+# previously found, even if the duplicates are not contiguous.
+setopt HIST_FIND_NO_DUPS
+
+# If a new command line being added to the history list duplicates an older one, the older
+# command is removed from the list (even if it is not the previous event).
+setopt HIST_IGNORE_ALL_DUPS
+
+# Do not enter command lines into the history list if they are duplicates of the previous event.
+setopt HIST_IGNORE_DUPS
+
+# Remove command lines from the history list when the first character on the line is a space,
+# or when one of the expanded aliases contains a leading space. Only normal aliases (not
+# global or suffix aliases) have this behaviour. Note that the command lingers in the internal
+# history until the next command is entered before it vanishes, allowing you to briefly reuse
+# or edit the line. If you want to make it vanish right away without entering another command,
+# type a space and press return.
+setopt HIST_IGNORE_SPACE
+
+# When writing out the history file, older commands that duplicate newer ones are omitted.
+setopt HIST_SAVE_NO_DUPS
+
+# This option works like APPEND_HISTORY except that new history lines are added to the $HISTFILE
+# incrementally (as soon as they are entered), rather than waiting until the shell exits.
+setopt INC_APPEND_HISTORY
+
+# Keep history of `cd` as in with `pushd` and make `cd -<TAB>` work.
+DIRSTACKSIZE=32
+setopt auto_pushd
+setopt pushd_ignore_dups
+setopt pushd_minus
+
+# Ignore lines prefixed with '#'.
+setopt interactivecomments
+
+# Ignore duplicate in history.
+setopt hist_ignore_dups
+
+# Prevent record in history entry if preceding them with at least one space
+setopt hist_ignore_space
+
+# plugins
+# CTRL+ARROW_RIGHT   - partially accept suggestion up to the point that the cursor moves to
+# ARROW_RIGHT or END - accept suggestion and replace contents of the command line buffer with the suggestion
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+# CTRL+T - paste the selected files and directories onto the command-line
+# CTRL+R - paste the selected command from history onto the command-line
+# ALT+C  - cd into the selected directory
+source /usr/share/fzf/key-bindings.zsh
+# Type ** and hit tab (eg. with the cd command; works with directories, files, process IDs, hostnames, environment variables)
+source /usr/share/fzf/completion.zsh
+
+# Sift through history for previous commands matching everything up to current cursor position.
+# Moves the cursor to the end of line after each match.
+autoload -U up-line-or-beginning-search
+autoload -U down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+bindkey "^[[A" up-line-or-beginning-search # ARROW_UP
+bindkey "^[[B" down-line-or-beginning-search # ARROW_DOWN
+
+# Must go last (see https://github.com/zsh-users/zsh-syntax-highlighting#why-must-zsh-syntax-highlightingzsh-be-sourced-at-the-end-of-the-zshrc-file)
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
+
+if [ -z "$NVM_DIR" ]; then
+    export NVM_DIR="$HOME/.nvm"
+    source /usr/share/nvm/nvm.sh 2> /dev/null
+    source /usr/share/nvm/bash_completion 2> /dev/null
+    source /usr/share/nvm/install-nvm-exec 2> /dev/null
+fi
+
+# functions
+confirm() {
+    local answer
+    echo -ne "zsh: sure you want to run '${YELLOW}$*${NC}' [yN]? "
+    read -q answer
+        echo
+    if [[ "${answer}" =~ ^[Yy]$ ]]; then
+        command "${@}"
+    else
+        return 1
+    fi
+}
+
+confirm_wrapper() {
+    if [ "$1" = '--root' ]; then
+        local as_root='true'
+        shift
+    fi
+
+    local prefix=''
+
+    if [ "${as_root}" = 'true' ] && [ "${USER}" != 'root' ]; then
+        prefix="sudo"
+    fi
+    confirm ${prefix} "$@"
+}
+
+poweroff() { confirm_wrapper --root $0 "$@"; }
+reboot() { confirm_wrapper --root $0 "$@"; }
+hibernate() { confirm_wrapper --root $0 "$@"; }
+
+ex()
+{
+  if [ -f $1 ] ; then
+    case $1 in
+      *.tar.bz2)   tar xjf $1   ;;
+      *.tar.gz)    tar xzf $1   ;;
+      *.bz2)       bunzip2 $1   ;;
+      *.rar)       unrar x $1     ;;
+      *.gz)        gunzip $1    ;;
+      *.tar)       tar xf $1    ;;
+      *.tbz2)      tar xjf $1   ;;
+      *.tgz)       tar xzf $1   ;;
+      *.zip)       unzip $1     ;;
+      *.Z)         uncompress $1;;
+      *.7z)        7z x $1      ;;
+      *)           echo "'$1' cannot be extracted via ex()" ;;
+    esac
+  else
+    echo "'$1' is not a valid file"
+  fi
+}
+
+yay_fzf()
+{
+    yay -Sl \
+    | awk '{print $2 " / " $1 " " $4}' \
+    | fzf --multi --preview 'cat <(yay -Si {1}) <(yay -Fl {1} | awk "{print $2}")' \
+    | awk '{print $1}' \
+    | xargs -rot yay $1
+}
+
+# aliases
+
+## enable verbose / color
+alias cp='cp -iv'
+alias rcp='rsync -v --progress'
+alias rmv='rsync -v --progress --remove-source-files'
+alias mv='mv -iv'
+alias rm='rm -iv'
+alias rmdir='rmdir -v'
+alias ln='ln -v'
+alias chmod="chmod -c"
+alias chown="chown -c"
+alias mkdir="mkdir -v"
+
+if command -v colordiff > /dev/null 2>&1; then
+    alias diff="colordiff -Nuar"
+else
+    alias diff="diff -Nuar"
+fi
+
+alias grep='grep --colour=auto'
+alias egrep='egrep --colour=auto'
+alias ls='exa --group-directories-first'
+
+## shortcuts
+alias md="mkdir -p"
+alias rd="rmdir"
+alias ll='ls -l'
+alias lla='ls -la'
+
+alias yayf=yay_fzf
+alias pum='sudo reflector -c de --verbose -f 8 -p https --save /etc/pacman.d/mirrorlist'
+alias mixer="ncpamixer"
+alias cb="xclip -sel c"
