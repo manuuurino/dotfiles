@@ -1,0 +1,14 @@
+#!/bin/bash
+
+yay -Fy
+yay -Sy
+yay -Syu --noconfirm
+yay -Yc --noconfirm
+
+flatpak update -y
+flatpak remove --unused -y
+
+echo "updating plocate db"
+sudo updatedb
+
+sudo pacdiff
