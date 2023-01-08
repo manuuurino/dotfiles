@@ -1,7 +1,6 @@
 #!/bin/bash
 
 yay -Fy
-yay -Sy
 yay -Syu --noconfirm
 yay -Yc --noconfirm
 
@@ -10,5 +9,8 @@ flatpak remove --unused -y
 
 echo "updating plocate db"
 sudo updatedb
+
+sudo fwupdmgr refresh
+sudo fwupdmgr update
 
 sudo pacdiff
