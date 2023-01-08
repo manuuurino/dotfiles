@@ -1,0 +1,7 @@
+".*"
+	None, Up, Button4, 4
+	None, Down, Button5, 4
+
+"^Alacritty$"
+	None, Up, Button4
+	None, Down, Button5
