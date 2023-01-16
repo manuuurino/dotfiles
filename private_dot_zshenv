@@ -7,8 +7,8 @@ source "${XDG_CONFIG_HOME:-.config}/user-dirs.dirs" &> /dev/null
 # disable less history file
 export LESSHISTFILE=-
 
-export PATH="$PATH:$HOME/.emacs.d/bin/"
-export PATH="$HOME/.local/bin/:$PATH"
+#export PATH="$PATH:$HOME/.emacs.d/bin/"
+#export PATH="$HOME/.local/bin/:$PATH"
 
 # zsh
 ZDOTDIR=${ZDOTDIR:-${HOME}}
