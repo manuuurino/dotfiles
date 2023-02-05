@@ -110,12 +110,52 @@ compdef _directories md
 
 function yay_fzf()
 {
-    yay -Sl \
-    | awk '{print $2 " / " $1 " " $4}' \
-    | fzf --multi --preview 'cat <(yay -Si {1}) <(yay -Fl {1} | awk "{print $2}")' \
-    | awk '{print $1}' \
-    | xargs -rot yay $1
+	yay -Sl \
+		| awk '{print $2 " / " $1 " " $4}' \
+		| fzf --multi --preview 'cat <(yay -Si {1}) <(yay -Fl {1} | awk "{print $2}")' \
+		| awk '{print $1}' \
+		| xargs -rot yay $1
 }
+
+function apply-zshrc-to-user()
+{
+	local from="$HOME"
+	local prefix=""
+	local target_files="$from/{.zsh{rc,env},.p10k.zsh}"
+
+	if (( $# == 0 )); then
+		apply-zshrc-to-user -h
+		return
+	fi;
+
+	while [ $# -gt 0 ]; do
+		opt="$1";
+		shift;
+
+		case "$opt" in
+			"-h" | "--help" )
+				cat >&2 <<'EOF'
+Usage: apply-zshrc-to-user [-option] [user]
+Options:
+	-h, --help	show list of command-line options.
+	-s, --sudo	runs su with sudo.
+	-f, --files	default set to "$HOME/{.zsh{rc,env},.p10k.zsh}"
+EOF
+				return
+				;;
+			"-s" | "--sudo" )
+				prefix="sudo"
+				;;
+			"-f" | "--files" )
+				target_files="$1";
+				shift
+				;;
+		esac
+	done
+
+	"$prefix" su "$1" -s /bin/bash -c "cd ~ && cp $target_files ."
+}
+compdef _users apply-zshrc-to-user
 
 # Define named directories: ~w <=> Windows home directory on WSL.
 [[ -z $z4h_win_home ]] || hash -d w=$z4h_win_home
