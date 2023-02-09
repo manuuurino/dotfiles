@@ -7,3 +7,5 @@
 	autocrlf = input
 [pull]
 	rebase = true
+[alias]
+	tree = log --oneline --decorate --all --graph
