@@ -1,16 +1,51 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-yay -Fy
-yay -Syu --noconfirm
-yay -Yc --noconfirm
+function prompt()
+{
+	read -p "$1 [y/N]: " -n 1 -r
+	
+	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+		echo true
+		return
+	fi
 
-flatpak update -y
-flatpak remove --unused -y
+	echo false
+}
 
-echo "updating plocate db"
-sudo updatedb
+UPDATE_MIRRORS="$(prompt "update mirrorlist?")"
+echo
+UPDATE_DB="$(prompt "preform a updatedb?")"
+echo
 
-sudo fwupdmgr refresh
-sudo fwupdmgr update
+if [ "$UPDATE_MIRRORS" = true ]; then
+	sudo reflector -c de --verbose -f 8 -p https --save /etc/pacman.d/mirrorlist
+fi
 
-sudo pacdiff
+if [ -s "$(which "yay")" ]; then
+	yay -Fy
+	yay -Syu --noconfirm
+	yay -Yc --noconfirm
+else
+	sudo pacman -Fy
+	sudo pacman -Syu --noconfirm
+	sudo pacman -Sc --noconfirm
+fi
+
+[ -s "$(which "pkgfile")" ] && sudo pkgfile -u
+
+if [ -s "$(which "flatpak")" ]; then
+	flatpak update -y
+	flatpak remove --unused -y
+fi
+
+if [ -s "$(which "fwupdmgr")" ]; then
+	sudo fwupdmgr refresh
+	sudo fwupdmgr update
+fi
+
+[ -s "$(which "pacdiff")" ] && sudo pacdiff -3
+
+if [ "$UPDATE_DB" = true ]; then
+	tmux new-session -D "echo 'updating plocate db'; sudo updatedb -v"
+fi
+
