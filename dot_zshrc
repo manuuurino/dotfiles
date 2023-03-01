@@ -110,6 +110,7 @@ z4h source MichaelAquilina/zsh-you-should-use/you-should-use.plugin.zsh
 z4h source momo-lab/zsh-replace-multiple-dots/replace-multiple-dots.plugin.zsh
 z4h load   redxtech/zsh-show-path
 z4h load   grigorii-zander/zsh-npm-scripts-autocomplete
+z4h source /usr/share/nvm/bash_completion
 
 # Define key bindings.
 z4h bindkey z4h-backward-kill-word  Ctrl+Backspace     Ctrl+H
@@ -126,6 +127,8 @@ z4h bindkey z4h-cd-down    Alt+Down   # cd into a child directory
 # Autoload functions.
 autoload -Uz zmv
 
+# installs and soft loads nvm
+z4h source /usr/share/nvm/install-nvm-exec
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" --no-use
 
 # Define functions and completions.
